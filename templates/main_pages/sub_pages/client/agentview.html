@@ -1,0 +1,92 @@
+{% extends "main_pages/base.html" %}
+
+
+{% block content %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+<!-- Include Leaflet JavaScript -->
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<!-- Include Leaflet Routing Machine CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
+
+<!-- Include Leaflet Routing Machine JavaScript -->
+<script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+
+
+  
+          <div id="map" style="height: 500px;"></div>
+
+<!-- Include jQuery library -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+ 
+
+          
+ 
+          <script>
+
+
+
+         
+            function getLocation() {
+                if (navigator.geolocation) {
+                  navigator.geolocation.getCurrentPosition(showPosition);
+                } else {
+                  x.innerHTML = "Geolocation is not supported by this browser.";
+                }
+              }
+            
+              function showPosition(position) { 
+               let lat = (position.coords.latitude);
+               let lng = (position.coords.longitude);
+ 
+
+               var map = L.map('map').setView([{{ clients.first.latitude }}, {{ clients.first.longitude }}], 10);
+        
+            // Add a tile layer (you can use other tile layers as needed)
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(map);
+        
+            // Define custom icon for agent marker
+            var greenIcon = new L.Icon({
+                iconUrl: 'https://icons.iconarchive.com/icons/paomedia/small-n-flat/512/map-marker-icon.png',
+                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                iconSize: [50, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [1, -34],
+                shadowSize: [50, 41]
+            });
+        
+            // Add markers for clients
+            var agentMarker = L.marker([position.coords.latitude , position.coords.longitude ], {icon: greenIcon}).addTo(map);
+            agentMarker.bindPopup("<b>{{ request.user.client.name }}</b><br>Current Location").openPopup();
+            {% for client in clients %}
+                var clientMarker = L.marker([{{ client.latitude }}, {{ client.longitude }}]).addTo(map);
+                clientMarker.bindPopup("<b>{{ client.agent.name }}</b><br>{{ client.agent.contact }}").openPopup();
+            {% endfor %}
+        
+            // Add a marker for the agent's location
+       
+            // Draw route
+            var waypoints = [
+                L.latLng(position.coords.latitude, position.coords.longitude),
+                {% for client in clients %}
+                    L.latLng({{ client.latitude }}, {{ client.longitude }}),
+                {% endfor %}
+            ];
+        
+            L.Routing.control({
+                waypoints: waypoints,
+                routeWhileDragging: false
+            }).addTo(map);
+              }
+            
+           
+              getLocation();
+            // Initialize the map
+            
+        </script>
+          {% endblock %}
+
+

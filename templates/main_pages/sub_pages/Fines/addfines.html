@@ -1,0 +1,53 @@
+{% extends "main_pages/base.html" %}
+
+{% block content %}
+  </nav>
+  <!-- partial -->
+  <div class="main-panel">
+    <div class="content-wrapper">
+      <div class="page-header">
+        <h3 class="page-title"> Add Fines </h3>
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url "fines" %}">Fines</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Add Fines</li>
+          </ol>
+        </nav>
+      </div>
+      <div class="row">
+        <div class="col-12 grid-margin stretch-card">
+          <div class="card">
+            <div class="card-body">
+              {% if error_message %}
+                <div class="alert alert-danger" role="alert">
+                  {{ error_message }}
+                </div>
+              {% endif %}
+              <form class="forms-sample" action="{% url "addfines"%}" method='post'>
+                {% csrf_token %}
+                {{ form.client.label_tag }}
+                {{ form.client }}
+                {{ form.agent.label_tag }}
+                {{ form.agent }}
+                {{ form.reason.label_tag }}
+                {{ form.reason }}
+                {{ form.fined_amount.label_tag }}
+                <input type="number" class="form-control" name="fined_amount" placeholder='Fined Amount' required>
+                {% if request.user.is_superuser %}
+                {{ form.status.label_tag }}
+                {{ form.status }}
+                {% endif %}
+                <br>
+                <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                <a class="btn btn-light" href="{% url "fines" %}">Cancel</a>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  </div>
+  </div>
+{% endblock content %}

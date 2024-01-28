@@ -1,0 +1,287 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="{% static "dash_css/vendors/simple-line-icons/css/simple-line-icons.css" %}">
+    <link rel="stylesheet" href="{% static "dash_css/vendors/flag-icon-css/css/flag-icon.min.css" %}">
+    <link rel="stylesheet" href="{% static "dash_css/vendors/css/vendor.bundle.base.css" %}">
+    <link rel="stylesheet" href="{% static "dash_css/vendors/daterangepicker/daterangepicker.css" %}">
+    <link rel="stylesheet" href="{% static "dash_css/vendors/chartist/chartist.min.css" %}">
+    <link rel="stylesheet" href="{% static "dash_css/css/style.css" %}">
+    <link rel="shortcut icon" href="{% static "dash_css/images/favicon.png" %}" />
+    
+  </head>
+  <body>
+
+
+    <style>
+      .scrollable-table-container {
+          overflow-x: auto;
+      }
+  </style>
+  <!-- NAVBAR STARTS HERE-->
+
+  <div class="container-scroller">
+    <!-- partial:partials/_navbar.html -->
+    <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+      <div class="navbar-brand-wrapper d-flex align-items-center">
+        {% if request.user.is_authenticated %}
+        <a class="navbar-brand brand-logo" 
+        
+        {% if request.user.client %}
+        href="{% url "client_homepage" %}"
+        {% elif request.user.agent %}
+        href="{% url "agent_homepage" %}"
+        {% elif request.user.is_staff %}
+        href="{% url "admin_homepage" %}"
+        {% endif %}>
+        {% endif %}
+        
+          <p style="color: white;background-color: rgba(128, 128, 128, 0.184);padding:5px ;border-radius: 5px ;font-family:Arial, Helvetica, sans-serif;font-style:bolder;position:absolute;left:70px;"> 
+              HOMEPAGE
+          </p>
+      </a>
+       
+      </div>
+      <div class="navbar-menu-wrapper d-flex align-items-center flex-grow-1">
+        <h5 class="mb-0 font-weight-medium d-none d-lg-flex">Waste Management System</h5>
+        <ul class="navbar-nav navbar-nav-right ml-auto">
+         
+          
+          {% if request.user.is_authenticated and request.user.client %}
+          <li class="nav-item dropdown">
+            <a class="nav-link count-indicator message-dropdown" id="messageDropdown" href="#" data-toggle="dropdown" aria-expanded="false">
+                <i class="icon-speech"></i>
+                <span class="count">{{ notifications.count }}</span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list pb-0" aria-labelledby="messageDropdown" style="width: 400px; max-height: 500px; overflow-y: auto; overflow-x: hidden; scrollbar-width: thin;">
+                <style>
+                    /* For Firefox */
+                    .dropdown-menu::-webkit-scrollbar {
+                        width: 5px; /* Adjust the width to reduce scrollbar size */
+                    }
+                    .dropdown-menu::-webkit-scrollbar-thumb {
+                        background-color: #ff6600;
+                        border-radius: 10px;
+                    }
+                    .dropdown-menu::-webkit-scrollbar-track {
+                        background-color: #f8f9fa;
+                    }
+                </style>
+            
+                <a class="dropdown-item py-3" style="background-color: #f8f9fa; border-bottom: 1px solid #dee2e6;">
+                    <p class="mb-0 font-weight-bold text-uppercase" style="color: #ff8c00; font-size: 1.2em;">You have {{ notifications.count }} Notification</p>
+                </a>
+                <div class="dropdown-divider"></div>
+                {% for notification in notifications %}
+                    <a class="dropdown-item preview-item" style="border-bottom: 1px solid #dee2e6;"> 
+                        <div class="preview-item-content flex-grow py-2">
+                            <p class="preview-subject font-weight-bold text-dark" style="font-size: 1.1em;">
+                                {% if notification.agent %}
+                                    {{ notification.agent }}
+                                {% else %}
+                                    Admin
+                                {% endif %}
+                            </p>
+                            <p class="font-weight-light small-text" style="margin-top: 5px;">{{ notification.notification_text }}</p>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+{% endif %}
+         
+          <li class="nav-item dropdown d-none d-xl-inline-flex user-dropdown">
+            <a class="nav-link dropdown-toggle" id="UserDropdown" href="#" data-toggle="dropdown" aria-expanded="false">
+        
+              <span class="font-weight-bold text-uppercase" style="font-size: 1.2em;">{{ user.username }}</span>
+
+          </a>
+            {% comment %} <a class="nav-link dropdown-toggle" id="UserDropdown" href="#" data-toggle="dropdown" aria-expanded="false">
+              <img class="img-xs rounded-circle ml-2" src="https://robohash.org/mail@ashallendesign.co.uk" alt="Profile image"> <span class="font-weight-normal"> Henry Klein </span></a> {% endcomment %}
+            <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
+              <div class="dropdown-header text-center">
+               
+                {% comment %} <img class="img-md rounded-circle" src="images/faces/face8.jpg" alt="Profile image"> {% endcomment %}
+                <p class="mb-1 mt-3" style="font-weight: bold; text-transform: uppercase; font-size: 20px;">{{ user.username }}</p>
+
+                <p class="font-weight-light text-muted mb-0">{{user.email}}</p>
+              </div>
+               
+              {% comment %}<a class="dropdown-item"><i class="dropdown-item-icon icon-speech text-primary"></i> Messages</a>
+              <a class="dropdown-item"><i class="dropdown-item-icon icon-energy text-primary"></i> Activity</a>
+              <a class="dropdown-item"><i class="dropdown-item-icon icon-question text-primary"></i> FAQ</a> {% endcomment %}
+              <a class="dropdown-item" href={% url "logoutuser" %}><i class="dropdown-item-icon icon-power text-primary"></i>Sign Out</a>
+            </div>
+          </li>
+        </ul>
+        <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+          <span class="icon-menu"></span>
+        </button>
+      </div>
+    </nav>
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+      <!-- partial:partials/_sidebar.html -->
+      <nav class="sidebar sidebar-offcanvas" id="sidebar">
+        <ul class="nav">
+          
+         
+         
+          <!-- <li class="nav-item nav-category"><span class="nav-link">Tasks</span></li> -->
+
+          {% if request.user.is_superuser %}
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+              <span class="menu-title">Members</span>
+              
+              <i class="icon-people menu-icon"></i>
+            </a>
+            <div class="collapse" id="ui-basic">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"> <a class="nav-link" href="{% url "clients" %}">Clients</a></li>
+                <li class="nav-item"> <a class="nav-link" href="{% url "agents" %}">Agents</a></li>
+              </ul>
+            </div>
+          </li>
+     
+          <li class="nav-item">
+            <a class="nav-link" href="{% url "fines" %}">
+              <span class="menu-title">Fines</span>
+              <i class="icon-list menu-icon"></i>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url "notify" %}">
+              <span class="menu-title">Send Notifications</span>
+              <i class="icon-envelope menu-icon"></i>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url "receivedfines" %}">
+              <span class="menu-title">Recieved Fines</span>
+              <i class="icon-wallet menu-icon"></i>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url "agentslocationadminview" %}">
+              <span class="menu-title">View Agents Location</span>
+              <i class="icon-location-pin menu-icon"></i>
+            </a>
+          </li>
+          {% elif request.user.agent %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url "spots" %}">
+              <span class="menu-title">View Spots</span>
+              <i class="icon-location-pin menu-icon"></i>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url "fines" %}">
+              <span class="menu-title">Fines</span>
+              <i class="icon-list menu-icon"></i>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url "clients" %}">
+              <span class="menu-title">Report</span>
+              <i class="icon-book-open menu-icon"></i>
+            </a>
+          </li>
+          {% elif request.user.client %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url "view-agent-client" %}">
+              <span class="menu-title">View Agent</span>
+              <i class="icon-user menu-icon"></i>
+            </a>
+          </li>
+          <li class="nav-item"> 
+            <a class="nav-link" href="{% url "view-fines-user" %}">
+              <span class="menu-title">Fines</span>
+              <i class="icon-wallet menu-icon"></i>
+            </a>
+          </li>
+          
+
+          {% endif %}
+          <!-- <li class="nav-item">
+            <a class="nav-link" href="pages/charts/chartist.html">
+              <span class="menu-title">Charts</span>
+              <i class="icon-chart menu-icon"></i>
+            </a>
+          </li> -->
+          <!-- <li class="nav-item">
+            <a class="nav-link" href="pages/tables/basic-table.html">
+              <span class="menu-title">Tables</span>
+              <i class="icon-grid menu-icon"></i>
+            </a>
+          </li> -->
+          <!-- <li class="nav-item nav-category"><span class="nav-link">Sample Pages</span></li>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
+              <span class="menu-title">General Pages</span> -->
+              <!-- <i class="icon-doc menu-icon"></i> -->
+            </a>
+            <div class="collapse" id="auth">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"> <a class="nav-link" href="pages/samples/login.html"> Login </a></li>
+                <li class="nav-item"> <a class="nav-link" href="pages/samples/register.html"> Register </a></li>
+                <li class="nav-item"> <a class="nav-link" href="pages/samples/error-404.html"> 404 </a></li>
+                <li class="nav-item"> <a class="nav-link" href="pages/samples/error-500.html"> 500 </a></li>
+                <li class="nav-item"> <a class="nav-link" href="pages/samples/blank-page.html"> Blank Page </a></li>
+              </ul>
+            </div>
+          </li>
+         
+        </ul>
+      </nav>
+      <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+          <div class="row purchace-popup">
+            <div class="col-12 stretch-card grid-margin">
+              <div class="card card-secondary">
+      
+              </div>
+            </div>
+          </div>
+     
+          {% block content %}
+    
+          {% endblock content %}  
+         
+          
+      <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+  </div>
+  <!-- container-scroller -->
+   
+<script src="{% static "dash_css/vendors/js/vendor.bundle.base.js" %}"></script>
+<script src="{% static "dash_css/vendors/chart.js/Chart.min.js" %}"></script>
+<script src="{% static "dash_css/vendors/moment/moment.min.js" %}"></script>
+<script src="{% static "dash_css/vendors/daterangepicker/daterangepicker.js" %}"></script>
+<script src="{% static "dash_css/vendors/chartist/chartist.min.js" %}"></script>
+<script src="{% static "dash_css/js/off-canvas.js" %}"></script>
+<script src="{% static "dash_css/js/misc.js" %}"></script>
+<script src="{% static "dash_css/js/dashboard.js" %}"></script>
+<script src="{% static "dash_css/js/typeahead.js" %}"></script>
+<script src="{% static "dash_css/js/select2.js" %}"></script>
+ 
+<script>
+  function refreshPage() {
+      location.reload(true); // Reload the page
+  }
+</script>
+
+</body>
+</html>

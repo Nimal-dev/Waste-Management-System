@@ -1,0 +1,117 @@
+  {% extends "main_pages/base.html" %}
+
+
+  {% block content %}
+
+
+</nav>
+<!-- partial -->
+<div class="main-panel">
+<div class="content-wrapper">
+<div class="page-header">
+  <h3 class="page-title"> Add Clients </h3>
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url "clients" %}">Clients</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Add Clients</li>
+    </ol>
+  </nav>
+</div>
+<div class="row">
+  
+  <div class="col-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        {% if messages %}
+  <ul style="list-style: none; padding: 10px; margin: 10px 0; border-radius: 5px;">
+      {% for message in messages %}
+          <li style="background-color: #ffbaba; color: #d8000c; border: 1px solid #d8000c; padding: 10px; margin-bottom: 10px;">
+              {{ message }}
+          </li>
+      {% endfor %}
+  </ul>
+{% endif %}
+        <form class="forms-sample" method="post" action="{% url 'addclients' %}">
+          {% csrf_token %}
+          <div class="form-group">
+              <label for="exampleInputName1">Name</label>
+              <input type="text" class="form-control" id="name" name="name" placeholder="Name">
+          </div>
+          <div class="form-group">
+              <label for="exampleTextarea1">Address</label>
+              <textarea class="form-control" id="address" name="address" rows="4" placeholder="Address"></textarea>
+          </div>
+          <div class="form-group">
+              <label for="exampleInputContact1">Contact</label>
+              <input type="number" class="form-control" id="contact" name="contact" placeholder="Contact">
+          </div>
+          <div class="form-group">
+              <label for="exampleInputContact1">Location</label>
+              <input type="location" class="form-control" id="location" name="location" placeholder="location">
+          </div>
+          <div class="form-group">
+              <label for="exampleInputUsername">Username</label>
+              <input type="text" class="form-control" id="username" name="username" placeholder="Username">
+          </div>
+          <div class="form-group">
+              <label for="exampleInputEmail3">Email address</label>
+              <input type="email" class="form-control" id="email" name="email" placeholder="Email">
+          </div>
+          <div class="form-group">
+              <label for="exampleInputPassword4">Password</label>
+              <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+          </div>
+      
+
+          <input type="hidden" name="latitude" id="lat" value=""/>
+          <input type="hidden" name="longitude" id="lng" value=""/>
+          <button type="submit" class="btn btn-primary mr-2">Submit</button>
+          <a class="btn btn-light" href = "{% url "admin_homepage" %}">Cancel</a>
+      </form>
+      
+      </div>
+    </div>
+  </div>
+ 
+   
+
+
+
+</div></div></div></div></div>  
+    </div>
+  </div>
+</div>
+</div>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCWED24ut0NZVXBKwkiynWByxmjj__fVcw&libraries=places"></script>
+
+<script>  
+  
+  var autocomplete = new google.maps.places.Autocomplete(
+      document.getElementById('location'),
+      { types: ['geocode'] }
+  );
+  console.log(autocomplete)
+  // Event listener for place selection
+  autocomplete.addListener('place_changed', function() {
+    console.log('fd')
+      var place = autocomplete.getPlace();
+
+      // Check if a place is selected
+      if (place.geometry) {
+          // Get latitude and longitude
+          var lat = place.geometry.location.lat();
+          var lng = place.geometry.location.lng();
+
+          // Use the lat and lng as needed  lat = document.getElementById("lat");
+          
+        latfield = document.getElementById("lat");
+        lngfield = document.getElementById("lng");
+        latfield.value = lat;
+        lngfield.value = lng;
+      } else {
+          // Handle no place selected
+          console.error('No place selected');
+      }
+  });
+</script> 
+{% endblock content %}

@@ -1,0 +1,69 @@
+{% extends "main_pages/base.html" %}
+
+
+{% block content %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+<!-- Include Leaflet JavaScript -->
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<!-- Include Leaflet Routing Machine CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
+
+<!-- Include Leaflet Routing Machine JavaScript -->
+<script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+
+
+ 
+        <!-- partial --> 
+          
+          <div id="map" style="height: 500px;"></div>
+
+<!-- Include jQuery library -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+ 
+
+          
+ 
+          <script>
+
+
+  
+
+               var map = L.map('map').setView([{{ agents.first.latitude }}, {{ agents.first.longitude }}], 10);
+        
+            // Add a tile layer (you can use other tile layers as needed)
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(map);
+        
+            // Define custom icon for agent marker
+            var greenIcon = new L.Icon({
+                iconUrl: 'https://icons.iconarchive.com/icons/paomedia/small-n-flat/512/map-marker-icon.png',
+                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                iconSize: [50, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [1, -34],
+                shadowSize: [50, 41]
+            });
+        
+            // Add markers for clients 
+            {% for agent in agents %}
+                var clientMarker = L.marker([{{ agent.latitude }}, {{ agent.longitude }}]).addTo(map);
+                clientMarker.bindPopup("<b>{{ agent.agent.name }}</b><br>{{ agent.agent.contact }}").openPopup();
+            {% endfor %}
+        
+            // Add a marker for the agent's location
+       
+            // Draw route
+             
+            L.Routing.control({
+                waypoints: waypoints,
+                routeWhileDragging: false
+            }).addTo(map);
+               
+            
+        </script>
+          {% endblock %}
+
+

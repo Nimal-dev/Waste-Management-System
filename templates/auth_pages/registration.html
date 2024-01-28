@@ -1,0 +1,122 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{% static "auth_css/fonts/icomoon/style.css" %}">
+
+    <link rel="stylesheet" href="{% static "auth_css/css/owl.carousel.min.css" %}">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{% static "auth_css/css/bootstrap.min.css" %}">
+    
+    <!-- Style -->
+    <link rel="stylesheet" href="{% static "auth_css/css/style.css" %}">
+
+    <title>WMS | REGISTRATION</title>
+  </head>
+  <body>
+  
+
+  <div class="half">
+    <div class="bg order-1 order-md-2" style="background-image: url('{% static 'auth_css/images/w8.jpg' %}'); height: 250px;"></div>
+    <div class="contents order-2 order-md-1">
+
+      <div class="container">
+        <div class="row align-items-center justify-content-center">
+          <div class="col-md-6">
+            <div class="form-block">
+              <div class="text-center mb-5">
+              <h3>Register in <strong>Waste Management</strong></h3>
+              <!-- <p class="mb-4">Lorem ipsum dolor sit amet elit. Sapiente sit aut eos consectetur adipisicing.</p> -->
+              </div>
+              <form action="" method="post">
+                {% csrf_token %}
+                <!-- <div class="form-group first">
+                    <label for="name">Name</label>
+                    {{form.name}}
+                    {% comment %} <input type="text" class="form-control" placeholder="your-name" id="Name"> {% endcomment %}
+                  </div> 
+                  <div class="form-group first">
+                    <label for="username">Address</label>
+                    {{form.address}}
+                    {% comment %} <textarea type="text" class="form-control" placeholder="your-address" id="address"></textarea> {% endcomment %}
+                  </div>
+                  <div class="form-group first">
+                    <label for="username">Contact</label>
+                    {{form.contact}}
+                    {% comment %} <input type="text" class="form-control" placeholder="Phone-Number" id="address"></input> {% endcomment %}
+                  </div>-->
+                <div class="form-group first">
+                  <label for="username">Username</label>
+                  {{form.username}}
+                  {% comment %} <input type="text" class="form-control" placeholder="username for login" id="username"> {% endcomment %}
+                </div>
+                <input type="hidden" name="latitude" id="lat" value=""/>
+            <input type="hidden" name="longitude" id="lng" value=""/>
+            <input type="hidden" name="usertype" value="3"/>
+                <div class="form-group first">
+                  <label for="username">Email</label>
+                  {{form.email}}
+                  {% comment %} <input type="email" class="form-control" placeholder="your-email@gmail.com" id="email"> {% endcomment %}
+                </div>  
+                <div class="form-group first">
+                  <label for="password">Password</label>
+                  {{form.password1}}
+                  {% comment %} <input type="password" class="form-control" placeholder="Your Password" id="password"> {% endcomment %}
+                </div>
+                 <div class="form-group first">
+                  <label for="password">Re-Enter Password</label>
+                  {{form.password2}}
+                  {% comment %} <input type="password" class="form-control" placeholder="Verify Password" id="password"> {% endcomment %}
+                </div> 
+                
+          
+
+                <input type="submit" value="Register" class="btn btn-block btn-info  "><br>
+                {{form.errors}}
+                <p>Already have an Account!<a href="{% url "loginpage" %}">Log In!</a></p>
+
+                
+
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    
+  </div>
+    
+    
+  <script> 
+    function getLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition);
+      } else {
+        x.innerHTML = "Geolocation is not supported by this browser.";
+      }
+    }
+    
+    function showPosition(position) {
+    lat = document.getElementById('lat')
+    lng = document.getElementById('lng')
+     lat.value = position.coords.latitude
+     lng.value = position.coords.longitude
+    }
+
+    
+getLocation()
+    </script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCWED24ut0NZVXBKwkiynWByxmjj__fVcw&libraries=places"></script>
+    <script src="{% static "auth_css/js/jquery-3.3.1.min.js" %}"></script>
+    <script src="{% static "auth_css/js/popper.min.js" %}"></script>
+    <script src="{% static "auth_css/js/bootstrap.min.js" %}"></script>
+    <script src="{% static "auth_css/js/main.js" %}"></script>
+  </body>
+</html>

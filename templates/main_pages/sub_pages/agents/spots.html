@@ -1,0 +1,221 @@
+{% extends "main_pages/base.html" %}
+
+
+{% block content %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+<!-- Include Leaflet JavaScript -->
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<!-- Include Leaflet Routing Machine CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
+
+<!-- Include Leaflet Routing Machine JavaScript -->
+<script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+
+
+ 
+        <!-- partial -->
+        <div class="main-panel">
+          <div class="content-wrapper">
+           
+            <div class="row">
+              <div class="col-lg-12 grid-margin stretch-card">
+                
+              </div>
+              
+              
+              <div class="col-lg-12 stretch-card grid-margin">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Client details </h4>
+                   
+                    
+                    </p>
+                    <br>
+                    <br>
+                    {% if clients %}
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th> SL NO</th>
+                          <th>  Name </th>
+                          <th> Contact </th>
+                          <th> Address </th>
+                          <th>Email </th>
+                          <th>Actions </th>
+
+                         
+                        </tr>
+                      </thead>
+                      {% for client in clients %}
+
+                        <tr class="table-info">
+                          <td>{{forloop.counter}}</td>
+                          <td> {{client.name}} </td>
+                          <td> {{client.contact}} </td>
+                          <td> {{client.address}} </td>
+                          <td> {{client.email}} </td>
+                          <td>
+
+
+                            <a href="{% url "sendalert" client.id %}" class="btn btn-warning">Send Alert</a>
+                            <a href="{% url "completed" client.id %}" class="btn btn-success">Completed</a>
+                       
+                          </form>
+
+                          </td>
+                        </tr>
+    
+                      {% endfor %}
+                      {% else %}
+                      <table class="table table-bordered">
+                        <thead>
+                          <tr>
+                            <th> SL NO</th>
+                            <th>  Name </th>
+                            <th> Contact </th>
+                            <th> Address </th>
+                            <th>Email </th>
+                            <th>Actions </th>
+  
+                           
+                          </tr>
+                        </thead>
+                      <tr class="table-info" >
+                                <td colspan="6" class="text-center">
+                                    There are No Clients yet!✌️
+                                </td>
+                              </tr>
+                              
+                          
+                       {% endif %}
+                    </table>
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div> 
+          <div id="map" style="height: 500px;"></div>
+
+<!-- Include jQuery library -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<script>
+    // Function to update agent location
+    updateAgentLocation()
+    function updateAgentLocation() {
+        // Check if Geolocation is supported by the browser
+        if ('geolocation' in navigator) {
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    // Extract latitude and longitude from the position object
+                    var latitude = position.coords.latitude;
+                    var longitude = position.coords.longitude;
+ 
+                    var csrftoken = document.cookie.match(/csrftoken=([^ ;]+)/)[1];
+
+                    // Make AJAX request to update agent location
+                    $.ajax({
+                        url: '{% url "update_agent_location" %}',
+                        method: 'POST',
+                        data: { 
+                            'latitude': latitude,
+                            'longitude': longitude
+                        }, 
+                         headers: {
+                          'X-CSRFToken': csrftoken
+                      },
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.success) {
+                                console.log('Agent location updated successfully.');
+                            } else {
+                                console.error('Failed to update agent location:', response.error);
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('AJAX request failed:', status, error);
+                        }
+                    });
+                },
+                function(error) {
+                    console.error('Error getting location:', error.message);
+                }
+            );
+        } else {
+            console.error('Geolocation is not supported by this browser.');
+        }
+    }
+</script>
+
+          
+ 
+          <script>
+
+
+
+         
+            function getLocation() {
+                if (navigator.geolocation) {
+                  navigator.geolocation.getCurrentPosition(showPosition);
+                } else {
+                  x.innerHTML = "Geolocation is not supported by this browser.";
+                }
+              }
+            
+              function showPosition(position) { 
+               let lat = (position.coords.latitude);
+               let lng = (position.coords.longitude);
+ 
+
+               var map = L.map('map').setView([{{ clients.first.latitude }}, {{ clients.first.longitude }}], 10);
+        
+            // Add a tile layer (you can use other tile layers as needed)
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(map);
+        
+            // Define custom icon for agent marker
+            var greenIcon = new L.Icon({
+                iconUrl: 'https://icons.iconarchive.com/icons/paomedia/small-n-flat/512/map-marker-icon.png',
+                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                iconSize: [50, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [1, -34],
+                shadowSize: [50, 41]
+            });
+        
+            // Add markers for clients
+            var agentMarker = L.marker([position.coords.latitude , position.coords.longitude ], {icon: greenIcon}).addTo(map);
+            agentMarker.bindPopup("<b>{{ agent.name }}</b><br>Current Location").openPopup();
+            {% for client in clients %}
+                var clientMarker = L.marker([{{ client.latitude }}, {{ client.longitude }}]).addTo(map);
+                clientMarker.bindPopup("<b>{{ client.name }}</b><br>{{ client.address }}").openPopup();
+            {% endfor %}
+        
+            // Add a marker for the agent's location
+       
+            // Draw route
+            var waypoints = [
+                L.latLng(position.coords.latitude, position.coords.longitude),
+                {% for client in clients %}
+                    L.latLng({{ client.latitude }}, {{ client.longitude }}),
+                {% endfor %}
+            ];
+        
+            L.Routing.control({
+                waypoints: waypoints,
+                routeWhileDragging: false
+            }).addTo(map);
+              }
+            
+           
+              getLocation();
+            // Initialize the map
+            
+        </script>
+          {% endblock %}
+
+

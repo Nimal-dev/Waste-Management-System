@@ -1,0 +1,48 @@
+{% extends "main_pages/base.html" %}
+{% block content %}
+    <!-- partial -->
+    <div class="main-panel">
+        <div class="content-wrapper">
+            <div class="page-header">
+                {% comment %} <h3 class="page-title"> Send Notification </h3> {% endcomment %}
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 stretch-card grid-margin">
+                        <div class="card">
+                            <div class="card-body">
+
+                                <h4 class="card-title">Notification</h4>
+
+                                <br>
+                                <br>
+                                <div class="scrollable-table-container">
+                                    <form method="post" action="{% url 'notify' %}" class="forms-sample">
+                                        {% csrf_token %}
+                                        <div class="form-group">
+                                            <label for="exampleInputName1">Client Name</label>
+                                            <select class="form-control" name="client" required>
+                                                <option value="" selected>Select Client</option>
+                                                {% for client in clients %}
+                                                    <option value="{{ client.id }}">{{ client.name }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail3">Notification Message</label>
+                                            <textarea type="text" class="form-control" name="notification_text" id="exampleInputEmail3" placeholder="Enter Notification Message" required></textarea>
+                                        </div>
+
+                                        <button type="submit" class="btn btn-success mr-2">Send Notification</button>
+                                        <a class="btn btn-light" href="{% url 'admin_homepage' %}">Cancel</a>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}

@@ -1,0 +1,57 @@
+{% extends "main_pages/base.html" %}
+{% block content %}
+    <!-- partial -->
+    <div class="main-panel">
+        <div class="content-wrapper">
+            <div class="page-header">
+                <h3 class="page-title">Edit Agent</h3>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url "agents" %}">Agents</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Edit Agent</li>
+                    </ol>
+                </nav>
+            </div>
+            <div class="row">
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <form method="post" action="{% url 'updateagent' agent.id %}" class="forms-sample" enctype="multipart/form-data" onsubmit="return validateForm()">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label for="exampleInputName1">Name</label>
+                                    <input type="text" class="form-control" name="name" id="exampleInputName1" value="{{ agent.name }}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleTextarea1">Address</label>
+                                    <textarea class="form-control" id="exampleTextarea1" name="address" rows="4" placeholder="Address" required>{{ agent.address }}</textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputName1">Contact</label>
+                                    <input type="text" class="form-control" name="contact" id="exampleInputcontact1" pattern="[0-9]*" title="Please enter only numbers" value="{{ agent.contact }}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputName1">Area to cover</label>
+                                    <input type="text" class="form-control" name="area" id="exampleInputArea to cover1" placeholder="Area to cover" value="{{ agent.area }}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputName1">Register ID</label>
+                                    <input type="text" class="form-control" name="register_id" id="exampleInputRegister ID1" pattern="[0-9]*" title="Please enter only numbers" placeholder="Register ID" value="{{ agent.register_id }}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputEmail3">Username</label>
+                                    <input type="text" class="form-control" name="username" id="exampleInputEmail3" placeholder="username" value="{{ agent.username }}" required>
+                                </div>
+
+                                <button type="submit" class="btn btn-success mr-2">Update</button>
+                                <a class="btn btn-light" href="/agents">Cancel</a>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+{% endblock content %}

@@ -1,0 +1,63 @@
+{% load static %}
+
+<div class="row">
+    <div class="col-md-12 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-sm-flex align-items-center mb-4">
+            <h4 class="card-title mb-sm-0">Payments Info</h4>
+            {% comment %} <a href="#" class="text-dark ml-auto mb-3 mb-sm-0"> View all Products</a> {% endcomment %}
+          </div>
+          <div class="table-responsive border rounded p-1">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th class="font-weight-bold">Sl.No</th>
+                  <th class="font-weight-bold">Client</th>
+                  <th class="font-weight-bold">Fined Agent</th>
+                  <th class="font-weight-bold">Amount</th>
+                  <th class="font-weight-bold">Created at</th>
+                  <th class="font-weight-bold">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% if fines %}
+                  {% for finelist in fines %}
+                    <tr class="table-info">
+                      <td>{{ forloop.counter }}</td>
+                      <td>{{ finelist.client }}</td>
+                      <td>{{ finelist.agent }}</td>
+                      <td>&#8377;{{ finelist.fined_amount }}</td>
+                      <td>{{ finelist.date_created }}</td>
+                      <td>
+                        {% if finelist.status == 'Paid' %}
+                          <span class="btn btn-success">{{ finelist.status }}</span>
+                        {% elif finelist.status == 'Failed' %}
+                          <span class="btn btn-danger">{{ finelist.status }}</span>
+                        {% elif finelist.status == 'Pending' %}
+                          <span class="btn btn-warning">{{ finelist.status }}</span>
+                        {% else %}
+                          <!-- Handle other cases if needed -->
+                          {{ finelist.status }}
+                        {% endif %}
+                      </td>
+                    </tr>
+                  {% endfor %}
+                {% else %}
+                  <tr data-toggle="collapse" data-target="#noFinesMessage" class="clickable">
+                    <td colspan="6" class="text-center">
+                      There are No Fines to Show!✌️
+                    </td>
+                  </tr>
+                {% endif %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- content-wrapper ends -->
+<!-- partial:partials/_footer.html -->
+<!-- partial -->
+

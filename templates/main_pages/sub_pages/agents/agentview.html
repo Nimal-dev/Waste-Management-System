@@ -1,0 +1,90 @@
+
+{% extends "main_pages/base.html" %}
+{% block content %}
+    <!-- partial -->
+    <div class="main-panel">
+        <div class="content-wrapper">
+            <div class="page-header">
+                <h3 class="page-title">Agent Lists</h3>
+                
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#">Clients</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Agent Lists</li>
+                        
+                    </ol>
+                </nav>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-15 stretch-card grid-margin">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Agent Details</h4>
+                                <a href = "{% url "addagents" %}" class="btn btn-primary" style="position: absolute;right:50px;margin-bottom: 20px">Add Agent</a>
+                                
+                                <br>
+                                <br>
+                                <div class="scrollable-table-container">
+                                    {% if agents %}
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>SL NO</th>
+                                                    <th>Agent Name</th>
+                                                    <th>Area</th>
+                                                    <th>Contact</th>
+                                                    <th>UserName</th>
+                                                    <th>Register ID</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for agent in agents %}
+                                                    <tr class="table-info">
+                                                        <td>{{ forloop.counter }}</td>
+                                                        <td>{{ agent.name }}</td>
+                                                        <td>{{ agent.area }}</td>
+                                                        <td>{{ agent.contact }}</td>
+                                                        <td>{{ agent.username }}</td>
+                                                        <td>{{ agent.register_id }}</td>
+                                                        <td>
+                                                            <a href="{% url "editagent" agent.id %}" class="btn btn-warning">Edit</a>
+                                                            <form method="post" action = "{% url 'deleteagent' agent.id %}"style="display:inline;">
+                                                              {% csrf_token %}
+                                                              <button type="submit" class="btn btn-danger">Delete</button>
+                                                          </form>
+                                
+                                                        </td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    {% else %}
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>SL NO</th>
+                                                    <th>UserName</th>
+                                                    <th>AgentName</th>
+                                                    <th>Reason</th>
+                                                    <th>Amount</th>
+                                                </tr>
+                                            </thead>
+                                            <tr class="table-info">
+                                                <td colspan="6" class="text-center">
+                                                    No Agents Available!
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    {% endif %}
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

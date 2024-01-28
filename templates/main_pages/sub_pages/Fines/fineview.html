@@ -1,0 +1,89 @@
+{% extends "main_pages/base.html" %}
+{% block content %}
+        <!-- partial -->
+        <div class="main-panel">
+            <div class="content-wrapper">
+              <div class="page-header">
+                
+              </div>
+              <div class="container">
+                <div class="row">
+                  <div class="col-lg-15 stretch-card grid-margin">
+                    <div class="card">
+                      <div class="card-body">
+                        <a href="{% url "addfines" %}" class="btn btn-primary" style="position: absolute; right: 50px;">Add Fine</a>
+          
+                        <h4 class="card-title">Fines Details</h4>
+          
+                        <br>
+                        <br>
+                        <div class="scrollable-table-container">
+                          {% if fines %}
+                            <table class="table table-bordered">
+                              <thead>
+                                <tr>
+                                  <th>SL NO</th>
+                                  <th>Client Name</th>
+                                  <th>Agent Name</th>
+                                  <th>Reason</th>
+                                  <th>Fined Amount</th>
+                                  <th>Fine Status</th>
+                                  {% if request.user.is_superuser %}
+                                  <th>Actions</th>
+                                  {% endif %}
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {% for finelist in fines %}
+                                  <tr class="table-info">
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ finelist.client.name }}</td>
+                                    <td>{{ finelist.agent }}</td>
+                                    <td>{{ finelist.reason }}</td>
+                                    <td>&#8377;{{ finelist.fined_amount }}</td>
+                                    <td>
+                                      {% if finelist.status == 'Paid' %}
+                                        <span class="btn btn-success">{{ finelist.status }}</span>
+                                      {% elif finelist.status == 'Failed' %}
+                                        <span class="btn btn-danger">{{ finelist.status }}</span>
+                                      {% elif finelist.status == 'Pending' %}
+                                        <span class="btn btn-warning">{{ finelist.status }}</span>
+                                      {% else %}
+                                        <!-- Handle other cases if needed -->
+                                        {{ finelist.status }}
+                                      {% endif %}
+                                    </td> 
+                                    {% if request.user.is_superuser %}
+                                    <td>
+                                      <a href='{% url "editfine" finelist.id %}' class="btn btn-success">Edit Amount</a>
+                                      <form method="post" action="{% url 'deletefine' finelist.id %}" style="display:inline;">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                      </form>
+                                    </td>
+                                    {% endif %}
+                                  </tr>
+                                {% endfor %}
+                              </tbody>
+                            </table>
+                          {% else %}
+                            <table class="table table-bordered">
+                              <tr data-toggle="collapse" data-target="#noFinesMessage" class="clickable">
+                                <td colspan="7" class="text-center">
+                                    There are No Fines to Show!✌️
+                                </td>
+                              </tr>
+                              
+                            </table>
+                          {% endif %}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        
+          {% endblock content %}
